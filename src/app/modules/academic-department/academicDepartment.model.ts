@@ -38,8 +38,13 @@ academicDepartmentSchema.pre('save', async function (next) {
 
 academicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
   const query = this.getQuery();
+  console.log('pre hook query', query);
 
-  const isAcademicDepartmentExist = await AcademicDepartment.findOne(query);
+  const isAcademicDepartmentExist = await AcademicDepartment.findById(
+    query._id,
+  );
+  console.log('checking');
+  console.log('pre hook isAcademicDepartmentExist', isAcademicDepartmentExist);
 
   if (!isAcademicDepartmentExist) {
     throw new AppError(
