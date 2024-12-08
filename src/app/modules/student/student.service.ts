@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { TStudent } from './student.interface';
 import { Student } from './student.model';
 import AppError from '../../errors/AppError';
 import { StatusCodes } from 'http-status-codes';
