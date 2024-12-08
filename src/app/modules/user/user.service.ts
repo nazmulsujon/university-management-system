@@ -9,57 +9,50 @@ import { User } from './user.model';
 import { generateStudentId } from './user.utils';
 import mongoose from 'mongoose';
 
-const createStudentIntoDB = async (password: string, payload: TStudent) => {
-  // create a user object
-  const userData: Partial<TUser> = {};
+const createStudentIntoDB = async (
+  password: string = config.default_password as string,
+  payload: TStudent,
+) => {
+  const userData: Partial<TUser> = {
+    password,
+    role: 'student',
+  };
 
-  //if password is not given , use deafult password
-  userData.password = password || (config.default_password as string);
-
-  //set student role
-  userData.role = 'student';
-
-  // find academic semester info
   const admissionSemester = await AcademicSemester.findById(
     payload.admissionSemester,
   );
+
+  if (!admissionSemester) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'Academic Semester not found');
+  }
+
+  userData.id = await generateStudentId(admissionSemester);
 
   const session = await mongoose.startSession();
 
   try {
     session.startTransaction();
-    //set  generated id
-    if (admissionSemester) {
-      userData.id = await generateStudentId(admissionSemester);
-    } else {
-      throw new AppError(StatusCodes.NOT_FOUND, 'Academic Semester not found');
-    }
 
-    // create a user (transaction-1)
-    const newUser = await User.create([userData], { session }); //now new user is an array
-
+    const newUser = await User.create([userData], { session });
     if (!newUser.length) {
       throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to create user');
     }
 
-    //create a student (transaction-2)
-    if (newUser.length) {
-      payload.id = newUser[0].id; // set id , _id as user
-      payload.user = newUser[0]._id; //reference _id
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id;
 
-      const newStudent = await Student.create([payload], { session });
-      if (!newStudent.length) {
-        throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to create student');
-      }
-
-      await session.commitTransaction();
-      session.endSession();
-
-      return newStudent;
+    const newStudent = await Student.create([payload], { session });
+    if (!newStudent.length) {
+      throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to create student');
     }
+
+    await session.commitTransaction();
+    return newStudent;
   } catch (err) {
     await session.abortTransaction();
-    await session.endSession();
+    throw err;
+  } finally {
+    session.endSession();
   }
 };
 
