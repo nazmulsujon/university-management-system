@@ -47,8 +47,10 @@ const createStudentIntoDB = async (
     }
 
     await session.commitTransaction();
+
     return newStudent;
   } catch (err) {
+    console.log('err >>>', err);
     await session.abortTransaction();
     throw err;
   } finally {

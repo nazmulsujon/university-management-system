@@ -7,6 +7,8 @@ import {
   TStudent,
   TUserName,
 } from './student.interface';
+import AppError from '../../errors/AppError';
+import { StatusCodes } from 'http-status-codes';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -169,6 +171,19 @@ studentSchema.pre('findOne', function (next) {
 
 studentSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
+
+studentSchema.pre('findOneAndUpdate', async function (next) {
+  // https://mongoosejs.com/docs/middleware.html#pre
+  console.log('this', this.getFilter());
+
+  const isStudentExist = await Student.findOne({ id: this.getFilter().id });
+
+  if (!isStudentExist) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'This student does not exist.');
+  }
+
   next();
 });
 
