@@ -8,9 +8,9 @@ import { TUser } from './user.interface';
 import { User } from './user.model';
 import { generateFacultyId, generateStudentId } from './user.utils';
 import mongoose from 'mongoose';
-import { TFaculty } from '../Faculty/faculty.interface';
+import { TFaculty } from '../faculty/faculty.interface';
 import { AcademicDepartment } from '../academic-department/academicDepartment.model';
-import { Faculty } from '../Faculty/faculty.model';
+import { Faculty } from '../faculty/faculty.model';
 
 const createStudentIntoDB = async (
   password: string = config.default_password as string,

@@ -2,10 +2,10 @@ import mongoose from 'mongoose';
 import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
-import { TFaculty } from './faculty.interface';
 import { Faculty } from './faculty.model';
 import { StatusCodes } from 'http-status-codes';
 import { FacultySearchableFields } from './faculty.constant';
+import { TFaculty } from './faculty.interface';
 
 const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
   const facultyQuery = new QueryBuilder(
