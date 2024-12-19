@@ -6,6 +6,7 @@ import { TSemesterRegistration } from './semesterRegistration.interface';
 import { SemesterRegistration } from './semesterRegistration.model';
 import { StatusCodes } from 'http-status-codes';
 import { AcademicSemester } from '../academic-semester/academicSemester.model';
+import { OfferedCourse } from '../offered-course/OfferedCourse.model';
 
 const createSemesterRegistrationIntoDB = async (
   payload: TSemesterRegistration,
@@ -20,7 +21,7 @@ const createSemesterRegistrationIntoDB = async (
   const academicSemester = payload?.academicSemester;
 
   //check if there any registered semester that is already 'UPCOMING'|'ONGOING'
-  const isThereAnyUpcomingOrOngoingSemester =
+  const isThereAnyUpcomingOrOngoingSEmester =
     await SemesterRegistration.findOne({
       $or: [
         { status: RegistrationStatus.UPCOMING },
@@ -28,10 +29,10 @@ const createSemesterRegistrationIntoDB = async (
       ],
     });
 
-  if (isThereAnyUpcomingOrOngoingSemester) {
+  if (isThereAnyUpcomingOrOngoingSEmester) {
     throw new AppError(
       StatusCodes.BAD_REQUEST,
-      `There is already an ${isThereAnyUpcomingOrOngoingSemester.status} registered semester!`,
+      `There is aready an ${isThereAnyUpcomingOrOngoingSEmester.status} registered semester !`,
     );
   }
   // check if the semester is exist
@@ -149,10 +150,10 @@ const updateSemesterRegistrationIntoDB = async (
 
 const deleteSemesterRegistrationFromDB = async (id: string) => {
   /** 
-    * Step1: Delete associated offered courses.
-    * Step2: Delete semester registraton when the status is 
-    'UPCOMING'.
-    **/
+  * Step1: Delete associated offered courses.
+  * Step2: Delete semester registraton when the status is 
+  'UPCOMING'.
+  **/
 
   // checking if the semester registration is exist
   const isSemesterRegistrationExists = await SemesterRegistration.findById(id);
@@ -226,5 +227,5 @@ export const SemesterRegistrationService = {
   getAllSemesterRegistrationsFromDB,
   getSingleSemesterRegistrationsFromDB,
   updateSemesterRegistrationIntoDB,
-  deleteSemesterRegistrationIntoDB,
+  deleteSemesterRegistrationFromDB,
 };
