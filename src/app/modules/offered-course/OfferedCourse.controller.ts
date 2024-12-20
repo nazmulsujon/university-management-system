@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
-import { OfferedCourseServices } from './OfferedCourse.service';
 import { StatusCodes } from 'http-status-codes';
+import { OfferedCourseServices } from './offeredCourse.service';
 
 const createOfferedCourse = catchAsync(async (req: Request, res: Response) => {
   const result = await OfferedCourseServices.createOfferedCourseIntoDB(

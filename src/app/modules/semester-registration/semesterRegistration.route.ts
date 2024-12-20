@@ -33,4 +33,4 @@ router.delete(
 
 router.get('/', SemesterRegistrationController.getAllSemesterRegistrations);
 
-export const semesterRegistrationRoutes = router;
+export const SemesterRegistrationRoutes = router;

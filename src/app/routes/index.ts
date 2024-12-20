@@ -1,3 +1,4 @@
+import { AuthRoutes } from './../modules/auth/auth.route';
 import { Router } from 'express';
 import { userRoutes } from '../modules/user/user.route';
 import { StudentRoutes } from '../modules/student/student.route';
@@ -7,7 +8,8 @@ import { AcademicDepartmentRoutes } from '../modules/academic-department/academi
 import { CourseRoutes } from '../modules/course/course.route';
 import { FacultyRoutes } from '../modules/faculty/faculty.route';
 import { AdminRoutes } from '../modules/admin/admin.routes';
-import { semesterRegistrationRoutes } from '../modules/semester-registration/semesterRegistration.route';
+import { SemesterRegistrationRoutes } from '../modules/semester-registration/semesterRegistration.route';
+import { offeredCourseRoutes } from '../modules/offered-course/offeredCourse.route';
 
 const router = Router();
 
@@ -45,12 +47,16 @@ const moduleRoutes = [
     route: CourseRoutes,
   },
   {
-    path: '/courses',
-    route: CourseRoutes,
+    path: '/semester-registrations',
+    route: SemesterRegistrationRoutes,
   },
   {
-    path: '/semester-registrations',
-    route: semesterRegistrationRoutes,
+    path: '/offered-courses',
+    route: offeredCourseRoutes,
+  },
+  {
+    path: '/auth',
+    route: AuthRoutes,
   },
 ];
 
